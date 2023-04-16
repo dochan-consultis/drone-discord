@@ -67,13 +67,12 @@ type (
 
 	// Config for the plugin.
 	Config struct {
-		WebhookID    string
-		WebhookToken string
-		Color        string
-		Message      []string
-		File         []string
-		Drone        bool
-		GitHub       bool
+		WebhookURL string
+		Color      string
+		Message    []string
+		File       []string
+		Drone      bool
+		GitHub     bool
 	}
 
 	// EmbedFooterObject for Embed Footer Structure.
@@ -163,7 +162,7 @@ func newfileUploadRequest(uri string, params map[string]string, paramName, path 
 
 // Exec executes the plugin.
 func (p *Plugin) Exec() error {
-	if p.Config.WebhookID == "" || p.Config.WebhookToken == "" {
+	if p.Config.WebhookURL == "" {
 		return errors.New("missing discord config")
 	}
 
@@ -218,7 +217,7 @@ func (p *Plugin) Exec() error {
 
 // SendFile upload file to discord
 func (p *Plugin) SendFile(file string) error {
-	webhookURL := fmt.Sprintf("https://discordapp.com/api/webhooks/%s/%s", p.Config.WebhookID, p.Config.WebhookToken)
+	webhookURL := p.Config.WebhookURL
 	extraParams := map[string]string{}
 
 	if p.Payload.Username != "" {
@@ -253,7 +252,7 @@ func (p *Plugin) SendFile(file string) error {
 
 // SendMessage to send discord message.
 func (p *Plugin) SendMessage() error {
-	webhookURL := fmt.Sprintf("https://discordapp.com/api/webhooks/%s/%s", p.Config.WebhookID, p.Config.WebhookToken)
+	webhookURL := p.Config.WebhookURL
 	b := new(bytes.Buffer)
 	if err := json.NewEncoder(b).Encode(p.Payload); err != nil {
 		return err

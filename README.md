@@ -2,15 +2,13 @@
 
 ![logo](images/discord-logo.png)
 
-Drone plugin for sending message to Discord channel using Webhook.
+ **Change compared to [appleboy/drone-discord](appleboy/drone-discord) are :**
+ * **single property for setting webhook url**
+ * **default message when `message` parameter is not provided** 
 
-[![GoDoc](https://godoc.org/github.com/appleboy/drone-discord?status.svg)](https://godoc.org/github.com/appleboy/drone-discord)
-[![Build Status](https://cloud.drone.io/api/badges/appleboy/drone-discord/status.svg)](https://cloud.drone.io/appleboy/drone-discord)
-[![Build status](https://ci.appveyor.com/api/projects/status/xj24ye9lu68a9sqm?svg=true)](https://ci.appveyor.com/project/appleboy/drone-discord-bne7m)
-[![codecov](https://codecov.io/gh/appleboy/drone-discord/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-discord)
-[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-discord)](https://goreportcard.com/report/github.com/appleboy/drone-discord)
-[![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-discord.svg)](https://hub.docker.com/r/appleboy/drone-discord/)
-[![microbadger](https://images.microbadger.com/badges/image/appleboy/drone-discord:linux-amd64.svg)](https://microbadger.com/images/appleboy/drone-discord:linux-amd64 "Get your own image badge on microbadger.com")
+***
+
+Drone plugin for sending message to Discord channel using Webhook.
 
 Webhooks are a low-effort way to post messages to channels in Discord. They do not require a bot user or authentication to use. See more [api document information](https://discordapp.com/developers/docs/resources/webhook). For the usage information and a listing of the available options please take a look at [the docs](http://plugins.drone.io/appleboy/drone-discord/).
 
@@ -21,18 +19,12 @@ Sending discord message using a binary, docker or [Drone CI](http://docs.drone.i
 * [x] Send Multiple Messages
 * [x] Send Multiple Files
 
-## Build or Download a binary
-
-The pre-compiled binaries can be downloaded from [release page](https://github.com/appleboy/drone-discord/releases). Support the following OS type.
-
-* Windows amd64/386
-* Linux arm/amd64/386
-* Darwin amd64/386
+## Build a binary
 
 With `Go` installed
 
 ```sh
-go get -u -v github.com/appleboy/drone-discord
+go get -u -v github.com/theglow666/drone-discord
 ```
 
 or build the binary with the following command:
@@ -56,23 +48,19 @@ There are three ways to send notification.
 
 ```bash
 drone-discord \
-  --webhook-id xxxx \
-  --webhook-token xxxx \
-  --message "Test Message"
+  --webhook-url xxxx
 ```
 
 ### Usage from docker
 
 ```bash
 docker run --rm \
-  -e WEBHOOK_ID=xxxxxxx \
-  -e WEBHOOK_TOKEN=xxxxxxx \
+  -e WEBHOOK_URL=xxxxxxx \
   -e WAIT=false \
   -e TTS=false \
   -e USERNAME=test \
   -e AVATAR_URL=http://example.com/xxxx.png \
-  -e MESSAGE=test \
-  appleboy/drone-discord
+  theglow666/drone-discord
 ```
 
 ### Usage from drone ci
@@ -83,8 +71,7 @@ Execute from the working directory:
 
 ```sh
 docker run --rm \
-  -e WEBHOOK_ID=xxxxxxx \
-  -e WEBHOOK_TOKEN=xxxxxxx \
+  -e WEBHOOK_URL=xxxxxxx \
   -e WAIT=false \
   -e TTS=false \
   -e USERNAME=test \
@@ -104,7 +91,7 @@ docker run --rm \
   -e DRONE_JOB_FINISHED=1477550750 \
   -v $(pwd):$(pwd) \
   -w $(pwd) \
-  appleboy/drone-discord
+  theglow666/drone-discord
 ```
 
 You can get more [information](DOCS.md) about how to use this plugin in drone.

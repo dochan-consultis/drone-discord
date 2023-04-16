@@ -68,14 +68,6 @@
           },
         ],
       },
-      {
-        name: 'codecov',
-        image: 'robertstettner/drone-codecov',
-        pull: 'always',
-        settings: {
-          token: { 'from_secret': 'codecov_token' },
-        },
-      },
     ],
     volumes: [
       {
@@ -140,8 +132,8 @@
           dry_run: true,
           tags: os + '-' + arch,
           dockerfile: 'docker/Dockerfile.' + os + '.' + arch,
-          repo: 'appleboy/' + name,
-          cache_from: 'appleboy/' + name,
+          repo: 'theglow666/' + name,
+          cache_from: 'theglow666/' + name,
         },
         when: {
           event: [ 'pull_request' ],
@@ -156,8 +148,8 @@
           auto_tag: true,
           auto_tag_suffix: os + '-' + arch,
           dockerfile: 'docker/Dockerfile.' + os + '.' + arch,
-          repo: 'appleboy/' + name,
-          cache_from: 'appleboy/' + name,
+          repo: 'theglow666/' + name,
+          cache_from: 'theglow666/' + name,
           username: { 'from_secret': 'docker_username' },
           password: { 'from_secret': 'docker_password' },
         },
@@ -175,87 +167,6 @@
       ref: [
         'refs/heads/master',
         'refs/pull/**',
-        'refs/tags/**',
-      ],
-    },
-  },
-
-  release:: {
-    kind: 'pipeline',
-    name: 'release-binary',
-    platform: {
-      os: 'linux',
-      arch: 'amd64',
-    },
-    steps: [
-      {
-        name: 'build-all-binary',
-        image: 'golang:1.16',
-        pull: 'always',
-        commands: [
-          'make release'
-        ],
-        when: {
-          event: [ 'tag' ],
-        },
-      },
-      {
-        name: 'deploy-all-binary',
-        image: 'plugins/github-release',
-        pull: 'always',
-        settings: {
-          files: [ 'dist/release/*' ],
-          api_key: { 'from_secret': 'github_release_api_key' },
-        },
-        when: {
-          event: [ 'tag' ],
-        },
-      },
-    ],
-    depends_on: [
-      'testing',
-    ],
-    trigger: {
-      ref: [
-        'refs/tags/**',
-      ],
-    },
-  },
-
-  notifications(os='linux', arch='amd64', depends_on=[]):: {
-    kind: 'pipeline',
-    name: 'notifications',
-    platform: {
-      os: os,
-      arch: arch,
-    },
-    steps: [
-      {
-        name: 'discord',
-        image: 'appleboy/drone-discord',
-        pull: 'always',
-        settings: {
-          webhook_id: { from_secret: 'webhook_id' },
-          webhook_token: { from_secret: 'webhook_token' },
-          message: '{{#success build.status}} ✅  Build #{{build.number}} of `{{repo.name}}` succeeded.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started "2006/01/02 15:04" "Asia/Taipei"}} \n\n ✅ finished: {{datetime build.finished "2006/01/02 15:04" "Asia/Taipei"}} {{else}} ❌  Build #{{build.number}} of `{{repo.name}}` failed.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started "2006/01/02 15:04" "Asia/Taipei"}} \n\n ✅ finished: {{datetime build.finished "2006/01/02 15:04" "Asia/Taipei"}}{{/success}}\n',
-        },
-      },
-      {
-        name: 'manifest',
-        image: 'plugins/manifest',
-        pull: 'always',
-        settings: {
-          username: { from_secret: 'docker_username' },
-          password: { from_secret: 'docker_password' },
-          spec: 'docker/manifest.tmpl',
-          ignore_missing: true,
-        },
-      },
-    ],
-    depends_on: depends_on,
-    trigger: {
-      ref: [
-        'refs/heads/master',
         'refs/tags/**',
       ],
     },

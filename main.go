@@ -38,19 +38,21 @@ func main() {
 	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:   "webhook-id",
-			Usage:  "discord webhook id",
-			EnvVar: "PLUGIN_WEBHOOK_ID,WEBHOOK_ID,DISCORD_WEBHOOK_ID,INPUT_WEBHOOK_ID",
-		},
-		cli.StringFlag{
-			Name:   "webhook-token",
-			Usage:  "discord webhook token",
-			EnvVar: "PLUGIN_WEBHOOK_TOKEN,WEBHOOK_TOKEN,DISCORD_WEBHOOK_TOKEN,INPUT_WEBHOOK_TOKEN",
+			Name:   "webhook-url",
+			Usage:  "discord webhook url",
+			EnvVar: "PLUGIN_WEBHOOK_URL,WEBHOOK_URL,DISCORD_WEBHOOK_URL,INPUT_WEBHOOK_URL",
 		},
 		cli.StringSliceFlag{
 			Name:   "message",
 			Usage:  "the message contents (up to 2000 characters)",
 			EnvVar: "PLUGIN_MESSAGE,DISCORD_MESSAGE,MESSAGE,INPUT_MESSAGE",
+			Value: &cli.StringSlice{`Status:   {{#success build.status}}✅ Success{{else}}❌ Failed{{/success}}
+Branch:   {{commit.branch}}
+Commit:  {{commit.message}}
+Author:   {{commit.author}}
+Hash:     {{commit.sha}}
+Link:       ({{build.link}})
+------------------------------------`},
 		},
 		cli.StringSliceFlag{
 			Name:   "file",
@@ -263,13 +265,12 @@ func run(c *cli.Context) error {
 			DeployTo: c.String("deploy.to"),
 		},
 		Config: Config{
-			WebhookID:    c.String("webhook-id"),
-			WebhookToken: c.String("webhook-token"),
-			Message:      c.StringSlice("message"),
-			File:         c.StringSlice("file"),
-			Color:        c.String("color"),
-			Drone:        c.Bool("drone"),
-			GitHub:       c.Bool("github"),
+			WebhookURL: c.String("webhook-url"),
+			Message:    c.StringSlice("message"),
+			File:       c.StringSlice("file"),
+			Color:      c.String("color"),
+			Drone:      c.Bool("drone"),
+			GitHub:     c.Bool("github"),
 		},
 		Payload: Payload{
 			Wait:      c.Bool("wait"),
