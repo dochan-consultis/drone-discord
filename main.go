@@ -38,9 +38,9 @@ func main() {
 	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:   "webhook-url",
+			Name:   "webhook",
 			Usage:  "discord webhook url",
-			EnvVar: "PLUGIN_WEBHOOK_URL,WEBHOOK_URL,DISCORD_WEBHOOK_URL,INPUT_WEBHOOK_URL",
+			EnvVar: "PLUGIN_WEBHOOK,WEBHOOK,DISCORD_WEBHOOK,INPUT_WEBHOOK",
 		},
 		cli.StringSliceFlag{
 			Name:   "message",
@@ -265,12 +265,12 @@ func run(c *cli.Context) error {
 			DeployTo: c.String("deploy.to"),
 		},
 		Config: Config{
-			WebhookURL: c.String("webhook-url"),
-			Message:    c.StringSlice("message"),
-			File:       c.StringSlice("file"),
-			Color:      c.String("color"),
-			Drone:      c.Bool("drone"),
-			GitHub:     c.Bool("github"),
+			Webhook: c.String("webhook"),
+			Message: c.StringSlice("message"),
+			File:    c.StringSlice("file"),
+			Color:   c.String("color"),
+			Drone:   c.Bool("drone"),
+			GitHub:  c.Bool("github"),
 		},
 		Payload: Payload{
 			Wait:      c.Bool("wait"),

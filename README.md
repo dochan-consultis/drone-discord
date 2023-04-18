@@ -2,7 +2,7 @@
 
 ![logo](images/discord-logo.png)
 
- **Change compared to [appleboy/drone-discord](appleboy/drone-discord) are :**
+ **Change compared to [appleboy/drone-discord](https://github.com/appleboy/drone-discord) are :**
  * **single property for setting webhook url**
  * **default message when `message` parameter is not provided** 
 
@@ -44,18 +44,40 @@ go build -v -a -tags netgo -o release/linux/amd64/drone-discord
 
 There are three ways to send notification.
 
+### Usage from pipeline
+```
+- name: discord_notification
+  image: theglow666/drone-discord
+  settings:
+    webhook:
+      from_secret: discord_webhook
+```
+
+#### Optionally with message
+
+```
+- name: discord_notification
+  image: theglow666/drone-discord
+  settings:
+    webhook:
+      from_secret: discord_webhook
+    message: "{{#success build.status}} ✅  Build #{{build.number}} of `{{repo.name}}` succeeded.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started \"2006/01/02 15:04\" \"Asia/Taipei\"}} \n\n ✅ finished: {{datetime build.finished \"2006/01/02 15:04\" \"Asia/Taipei\"}} {{else}} ❌  Build #{{build.number}} of `{{repo.name}}` failed.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started \"2006/01/02 15:04\" \"Asia/Taipei\"}} \n\n ✅ finished: {{datetime build.finished \"2006/01/02 15:04\" \"Asia/Taipei\"}}{{/success}}\n"
+```
+
+
+
 ### Usage from binary
 
 ```bash
 drone-discord \
-  --webhook-url xxxx
+  --webhook xxxx
 ```
 
 ### Usage from docker
 
 ```bash
 docker run --rm \
-  -e WEBHOOK_URL=xxxxxxx \
+  -e WEBHOOK=xxxxxxx \
   -e WAIT=false \
   -e TTS=false \
   -e USERNAME=test \
@@ -71,7 +93,7 @@ Execute from the working directory:
 
 ```sh
 docker run --rm \
-  -e WEBHOOK_URL=xxxxxxx \
+  -e WEBHOOK=xxxxxxx \
   -e WAIT=false \
   -e TTS=false \
   -e USERNAME=test \
